@@ -11,6 +11,10 @@ kind: Namespace
 metadata:
   name: workshop-demo-dev
   labels:
+    # Autoriza al controlador de Argo CD a gestionar recursos en este namespace.
+    # Sin esta etiqueta, Argo CD puede leer pero no crear: la sincronización
+    # falla con "forbidden" al intentar crear el Deployment o el Service.
+    argocd.argoproj.io/managed-by: openshift-gitops
     shared-gateway-access: "true"
     istio-discovery: enabled
     app.kubernetes.io/part-of: workshop-gitops
