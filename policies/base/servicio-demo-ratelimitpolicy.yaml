@@ -25,4 +25,4 @@ spec:
       counters:
         # El valor se lee de los metadatos dinámicos que publica la AuthPolicy
         # en su sección "filters" (el filtro se llama "identidad").
-        - expression: 'auth.identity["sub"]'
+        - expression: auth.identity.identidad.sub
