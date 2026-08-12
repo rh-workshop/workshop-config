@@ -1,0 +1,7 @@
+# Namespace del plano de control de Connectivity Link.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kuadrant-system
+  labels:
+    app.kubernetes.io/part-of: workshop-plataforma

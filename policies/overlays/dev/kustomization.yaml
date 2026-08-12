@@ -1,0 +1,8 @@
+# Políticas aplicadas al entorno de desarrollo.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: workshop-demo-dev
+
+resources:
+  - ../../base

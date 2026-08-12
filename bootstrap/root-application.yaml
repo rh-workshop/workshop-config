@@ -1,0 +1,31 @@
+# Application raíz — patrón "app of apps".
+#
+# Es el ÚNICO recurso que se aplica a mano en todo el flujo. A partir de aquí
+# gobierna Argo CD: esta Application no despliega cargas de trabajo, sino que
+# apunta al directorio que contiene las demás Applications. Añadir un componente
+# nuevo al workshop consiste en añadir un archivo a ese directorio y confirmarlo
+# en Git; no vuelve a hacer falta ningún "oc apply".
+#
+#   oc apply -f bootstrap/root-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: workshop-root
+  namespace: openshift-gitops
+  labels:
+    app.kubernetes.io/part-of: workshop-gitops
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/rh-workshop/workshop-config.git
+    targetRevision: main
+    path: bootstrap/aplicaciones
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false

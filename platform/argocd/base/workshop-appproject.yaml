@@ -1,0 +1,39 @@
+# AppProject que agrupa las aplicaciones del workshop.
+#
+# Un AppProject es la frontera de gobierno de Argo CD: acota de qué
+# repositorios puede desplegar, a qué destinos y qué tipos de recurso puede
+# crear. En una plataforma real habría un proyecto por dominio o por equipo, de
+# modo que un equipo no pueda desplegar en el espacio de otro.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: workshop
+  namespace: openshift-gitops
+  labels:
+    app.kubernetes.io/part-of: workshop-gitops
+spec:
+  description: Aplicaciones y plataforma del workshop de OpenShift.
+
+  # Solo se admite el repositorio de configuración del workshop.
+  sourceRepos:
+    - https://github.com/rh-workshop/workshop-config.git
+
+  # Destinos permitidos: los namespaces del workshop y los de plataforma.
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: workshop-demo-dev
+    - server: https://kubernetes.default.svc
+      namespace: workshop-demo-test
+    - server: https://kubernetes.default.svc
+      namespace: platform-gateway
+    - server: https://kubernetes.default.svc
+      namespace: kuadrant-system
+
+  # El proyecto necesita crear recursos de ámbito de cluster (Namespace) y las
+  # políticas de Connectivity Link.
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

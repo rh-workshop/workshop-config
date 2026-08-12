@@ -1,0 +1,7 @@
+# Namespace del equipo de plataforma, donde vive el gateway compartido.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-gateway
+  labels:
+    app.kubernetes.io/part-of: workshop-plataforma

@@ -1,0 +1,13 @@
+# Namespace del entorno de pruebas.
+#
+# Ambas etiquetas son imprescindibles para la exposición por el gateway
+# compartido: "shared-gateway-access" para que el listener admita la ruta e
+# "istio-discovery" para que istiod descubra el namespace.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: workshop-demo-test
+  labels:
+    shared-gateway-access: "true"
+    istio-discovery: enabled
+    app.kubernetes.io/part-of: workshop-gitops

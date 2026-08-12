@@ -1,0 +1,26 @@
+# RateLimitPolicy del servicio de demostración.
+#
+# Limita el consumo por IDENTIDAD, no por dirección de origen. Es una distinción
+# importante y verificada: "source.address" incluye el puerto efímero de cada
+# conexión, de modo que cada petición cuenta como un origen distinto y el límite
+# nunca llega a dispararse. El sujeto del token (auth.identity.sub) sí es
+# estable y es el contador correcto para una API autenticada.
+#
+# Comprobación esperada: a partir de la petición número 6 dentro de la misma
+# ventana de 60 segundos, el gateway responde 429.
+apiVersion: kuadrant.io/v1
+kind: RateLimitPolicy
+metadata:
+  name: servicio-demo
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: servicio-demo
+  limits:
+    por-identidad:
+      rates:
+        - limit: 5
+          window: 60s
+      counters:
+        - expression: auth.identity.sub

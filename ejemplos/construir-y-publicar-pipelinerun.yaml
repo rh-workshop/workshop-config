@@ -1,0 +1,35 @@
+# Ejecución del pipeline de construcción.
+#
+# Un PipelineRun es una EJECUCIÓN concreta, no una definición: por eso vive en
+# "ejemplos/" y no lo gestiona Argo CD. Se crea con "oc create" (no "oc apply"),
+# porque cada ejecución necesita un nombre distinto; de ahí "generateName".
+#
+#   oc create -f ejemplos/construir-y-publicar-pipelinerun.yaml -n workshop-demo-dev
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: construir-y-publicar-
+  labels:
+    app.kubernetes.io/part-of: workshop-gitops
+spec:
+  pipelineRef:
+    name: construir-y-publicar
+  # Identidad con permiso para publicar en el registro de imágenes.
+  taskRunTemplate:
+    serviceAccountName: constructor
+  params:
+    - name: repo-url
+      value: https://github.com/rh-workshop/workshop-app.git
+    - name: revision
+      value: main
+    - name: imagen
+      value: image-registry.openshift-image-registry.svc:5000/workshop-demo-dev/servicio-demo:1.0.0
+  workspaces:
+    - name: fuente
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
