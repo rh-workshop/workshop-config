@@ -23,10 +23,10 @@ spec:
         credentials:
           authorizationHeader:
             prefix: Bearer
-    # La respuesta de éxito propaga la identidad al servicio de backend en una
-    # cabecera, para que la aplicación sepa quién llama sin validar el token.
     response:
       success:
+        # "headers" propaga la identidad al servicio de backend, para que la
+        # aplicación sepa quién llama sin tener que validar el token otra vez.
         headers:
           x-identidad:
             json:
@@ -35,3 +35,13 @@ spec:
                   selector: auth.identity.sub
                 cliente:
                   selector: auth.identity.azp
+        # "filters" publica la identidad en los metadatos dinámicos del gateway.
+        # Es el canal que lee la RateLimitPolicy: sin esta sección, el contador
+        # por identidad no encuentra su valor, no se incrementa nunca y el
+        # límite no llega a dispararse aunque la política figure como aplicada.
+        filters:
+          identidad:
+            json:
+              properties:
+                sub:
+                  selector: auth.identity.sub
