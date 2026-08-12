@@ -5,4 +5,5 @@ kind: Kustomization
 resources:
   - constructor-serviceaccount.yaml
   - constructor-rolebinding.yaml
+  - constructor-scc-rolebinding.yaml
   - construir-y-publicar-pipeline.yaml

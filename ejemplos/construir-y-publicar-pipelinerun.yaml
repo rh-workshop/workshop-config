@@ -11,6 +11,14 @@ metadata:
   generateName: construir-y-publicar-
   labels:
     app.kubernetes.io/part-of: workshop-gitops
+  annotations:
+    # El "asistente de afinidad" de Tekton fuerza a que todas las tareas que
+    # comparten workspace caigan en el mismo nodo. Con una clase de
+    # almacenamiento en modo WaitForFirstConsumer eso produce un bloqueo mutuo:
+    # el volumen espera a que se programe un pod y el pod espera al volumen, y
+    # la ejecución queda Pending con "didn't match pod affinity rules".
+    # Al desactivarlo, cada tarea se programa con normalidad.
+    pipeline.tekton.dev/affinity-assistant: disabled
 spec:
   pipelineRef:
     name: construir-y-publicar
@@ -30,6 +38,12 @@ spec:
         spec:
           accessModes:
             - ReadWriteOnce
+          # Se pide explícitamente una clase de almacenamiento de asignación
+          # INMEDIATA. Con la clase por defecto, que difiere la asignación hasta
+          # que hay un pod programado (WaitForFirstConsumer), el asistente de
+          # afinidad de Tekton y el volumen se esperan mutuamente y la ejecución
+          # no llega a arrancar.
+          storageClassName: ocs-external-storagecluster-ceph-rbd-immediate
           resources:
             requests:
               storage: 1Gi
