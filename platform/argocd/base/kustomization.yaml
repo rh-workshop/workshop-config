@@ -6,3 +6,4 @@ namespace: openshift-gitops
 
 resources:
   - workshop-appproject.yaml
+  - argocd-gateway-api-clusterrole.yaml

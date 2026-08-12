@@ -86,6 +86,10 @@ spec:
           value: "false"
 
   results:
-    - name: imagen-publicada
-      description: Referencia de la imagen construida y publicada.
-      value: $(params.imagen)
+    # Un result del Pipeline solo puede referenciar el result de una Task, no un
+    # parámetro: el webhook de validación de Tekton rechaza lo segundo. Se expone
+    # el digest que calcula la tarea de construcción, que además es la referencia
+    # inmutable y exacta de lo que se publicó.
+    - name: imagen-digest
+      description: Digest de la imagen construida y publicada.
+      value: $(tasks.construir-y-publicar.results.IMAGE_DIGEST)
