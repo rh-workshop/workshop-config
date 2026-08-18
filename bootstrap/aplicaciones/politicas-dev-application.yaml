@@ -9,7 +9,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
-  project: workshop
+  project: workshop-platform
   source:
     repoURL: https://github.com/rh-workshop/workshop-config.git
     targetRevision: main
