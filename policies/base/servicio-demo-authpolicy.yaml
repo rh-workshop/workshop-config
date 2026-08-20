@@ -36,12 +36,17 @@ spec:
                 cliente:
                   selector: auth.identity.azp
         # "filters" publica la identidad en los metadatos dinámicos del gateway.
-        # Es el canal que lee la RateLimitPolicy: sin esta sección, el contador
-        # por identidad no encuentra su valor, no se incrementa nunca y el
-        # límite no llega a dispararse aunque la política figure como aplicada.
+        # Es el canal que lee la RateLimitPolicy. OJO: el nombre del filtro DEBE
+        # ser "identity" — el wasm-shim resuelve el namespace CEL "auth.<filtro>"
+        # con el nombre literal del filtro, así que "auth.identity.clientid" solo
+        # existe si el filtro se llama "identity". Con otro nombre (p. ej.
+        # "identidad") el contador falla con NoSuchKey("identity") y el 429
+        # nunca dispara aunque ambas políticas figuren como Enforced.
         filters:
-          identidad:
+          identity:
             json:
               properties:
+                clientid:
+                  selector: auth.identity.azp
                 sub:
                   selector: auth.identity.sub
