@@ -7,10 +7,10 @@
 #
 # Este proyecto agrupa SOLO los componentes de plataforma (gateway, pipelines,
 # políticas, servicio-demo). Las Applications de los participantes usan un
-# proyecto aparte, `workshop`, que crea el playbook `setup-lab.yml` con sus
-# propias barandillas (destinos `user*` y el git-server interno del taller).
-# Separarlos es justamente la práctica que enseña el Lab 2: un proyecto por
-# dominio, para que un equipo no despliegue en el espacio de otro.
+# proyecto aparte, `workshop`, con sus propias barandillas: destinos acotados a
+# los espacios `user*` y su propio origen de repositorios. Separarlos es la
+# práctica recomendada — un proyecto por dominio, para que un equipo no
+# despliegue en el espacio de otro.
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
